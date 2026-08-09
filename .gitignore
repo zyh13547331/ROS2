@@ -1,0 +1,17 @@
+cat > .gitignore << 'EOF'
+# ROS2 编译产物
+**/build/
+**/install/
+**/log/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 数据文件
+*.bag
+
+# IDE 配置
+.vscode/
+.DS_Store
+EOF
