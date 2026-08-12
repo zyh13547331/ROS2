@@ -7,15 +7,28 @@ from ament_index_python.packages import get_package_share_directory #获取功�
 import os
 from cv_bridge import CvBridge
 import time
+from rcl_interfaces.msg import SetParametersResult
 
 class FaceDetectService(Node):
     def __init__(self):
         super().__init__('face_detect')
         self.service_ = self.create_service(FaceDetector, 'face_detect', self.detect_callback)
         self.bridge_ = CvBridge()
-        self.number_of_times_to_upsample_ = 1
-        self.model_ = "cnn"  # 使用CNN模型进行人脸检测
+        self.declare_parameter('number_of_times_to_upsample_',1)
+        self.declare_parameter('model_','cnn')
+        self.number_of_times_to_upsample_ = self.get_parameter('number_of_times_to_upsample_').value
+        self.model_ = self.get_parameter('model_').value  # 使用CNN模型进行人脸检测
         self.default_image_path_ = os.path.join(get_package_share_directory('python_service'), 'resource', 'default.webp')
+        self.add_on_set_parameters_callback(self.parameters_callback)
+
+    def parameters_callback(self,parameters):
+        for paramter in parameters:
+            self.get_logger().info(f"{paramter.name}->{paramter.value}")
+            if paramter.name == 'number_of_times_to_upsample':
+                self.number_of_times_to_upsample_ = paramter.value
+            elif paramter.name == 'model_':
+                self.model_ = paramter.value
+        return SetParametersResult(successful = True)   
 
     def detect_callback(self, request, response):
         if request.image.data:
