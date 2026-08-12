@@ -20,6 +20,8 @@ class FaceDetectService(Node):
         self.model_ = self.get_parameter('model_').value  # 使用CNN模型进行人脸检测
         self.default_image_path_ = os.path.join(get_package_share_directory('python_service'), 'resource', 'default.webp')
         self.add_on_set_parameters_callback(self.parameters_callback)
+        #设置自身节点参数的方法
+        #self.set_parameters([rclpy.Parameter('model_',rclpy.Parameter.Type.STRING,'cnn')])
 
     def parameters_callback(self,parameters):
         for paramter in parameters:
