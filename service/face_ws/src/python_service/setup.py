@@ -1,4 +1,5 @@
 from setuptools import find_packages, setup
+from glob import glob
 
 package_name = 'python_service'
 
@@ -12,6 +13,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name+"/resource", ['resource/default.webp']),
         ('share/' + package_name+"/resource", ['resource/new.jpg']),
+        ('share/' + package_name+"/launch", glob('launch/*.launch.py')),
 
     ],
     install_requires=['setuptools'],
