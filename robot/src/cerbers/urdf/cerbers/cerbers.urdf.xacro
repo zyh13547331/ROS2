@@ -9,6 +9,9 @@
 <!-- 执行器 -->
 <xacro:include filename="actuator/wheel.urdf.xacro"/>
 <xacro:include filename="actuator/caster.urdf.xacro"/>
+<!-- 插件 -->
+ <xacro:include filename="plugins/gazebo_control_plugin.xacro"/>
+ <xacro:include filename="plugins/gazebo_sensor_plugin.xacro"/>
 <!-- 调用宏 -->
 <xacro:base_xacro length="0.12" radius="0.1" />
 <xacro:imu_xacro xyz="0.0 0.0 0.02" />
@@ -18,5 +21,8 @@
 <xacro:wheel_xacro wheel_name="right_wheel" xyz="0.0 -0.10 -0.06" />
 <xacro:caster_xacro caster_name="front_caster" xyz="0.08 0.0 -0.076" />
 <xacro:caster_xacro caster_name="back_caster" xyz="-0.08 0.0 -0.076" />
+
+<xacro:gazebo_control_plugin />
+<xacro:gazebo_sensor_plugin />
 
 </robot>

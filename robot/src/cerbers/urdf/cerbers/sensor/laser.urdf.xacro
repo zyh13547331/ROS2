@@ -77,5 +77,14 @@
             <parent link="base_link"/>
             <child link="laser_cylinder_link"/>
         </joint>
+
+        <gazebo reference="laser_cylinder_link">
+            <material>Gazebo/Black</material>
+        </gazebo>
+
+        <gazebo reference="laser_link">
+            <material>Gazebo/Black</material>
+        </gazebo>
+
     </xacro:macro>
 </robot>
