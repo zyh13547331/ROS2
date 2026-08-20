@@ -2,7 +2,12 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import (
+    DeclareLaunchArgument,
+    ExecuteProcess,
+    IncludeLaunchDescription,
+    TimerAction,
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
@@ -29,6 +34,39 @@ def generate_launch_description():
     robot_description = ParameterValue(
         Command(['xacro ', LaunchConfiguration('model')]),
         value_type=str
+    )
+
+    # 模型 spawn 后自动加载并激活关节状态控制器。
+    # 用 spawner（自带 --controller-manager-timeout 等待服务就绪），比 ros2 control CLI 更可靠
+    action_load_joint_states_controller = ExecuteProcess(
+        cmd=['ros2', 'run', 'controller_manager', 'spawner',
+             'cerbers_joint_state_broadcaster',
+             '--controller-manager-timeout', '60'],
+        output='screen'
+    )
+
+    # action_load_effort_controller = ExecuteProcess(
+    #     cmd=['ros2', 'run', 'controller_manager', 'spawner',
+    #          'cerbers_effort_controller',
+    #          '--controller-manager-timeout', '60'],
+    #     output='screen'
+    # )
+
+    # 差速驱动控制器：接收 /cmd_vel 控制左右轮，发布 /odom
+    action_load_diff_drive_controller = ExecuteProcess(
+        cmd=['ros2', 'run', 'controller_manager', 'spawner',
+             'cerbers_diff_drive_controller',
+             '--controller-manager-timeout', '60'],
+        output='screen'
+    )
+
+
+
+    # spawn_entity.py 是长驻进程、spawn 成功后不会退出，因此不能用 OnProcessExit 触发。
+    # 改为延迟执行，spawner 内部的 timeout 会等到 gazebo_ros2_control 的 controller_manager 就绪
+    action_delayed_load_controller = TimerAction(
+        period=8.0,
+        actions=[action_load_joint_states_controller, action_load_diff_drive_controller]
     )
 
     action_robot_state_publisher = Node(
@@ -58,4 +96,5 @@ def generate_launch_description():
         action_robot_state_publisher,
         action_launch_gazebo,
         action_spawn_entity,
+        action_delayed_load_controller,
     ])
