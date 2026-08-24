@@ -26,4 +26,7 @@ endif()
 install(DIRECTORY launch config maps
 DESTINATION share/${PROJECT_NAME})
 
+install(PROGRAMS src/initial_pose.py
+  DESTINATION lib/${PROJECT_NAME})
+
 ament_package()

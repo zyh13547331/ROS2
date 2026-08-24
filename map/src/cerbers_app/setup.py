@@ -24,6 +24,10 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'init_pose=cerbers_app.init_pose:main',
+            'get_pose=cerbers_app.get_pose:main',
+            'nav_to_pose=cerbers_app.nav_to_pose:main',
+            'way_point_follow=cerbers_app.way_point_follow:main'
         ],
     },
 )
