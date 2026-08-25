@@ -9,7 +9,7 @@ class Speeker(Node):
         self.speech_service = self.create_service(SpeechText,'speech_text',
                                                   self.speech_callback)
         self.speaker = espeakng.Speaker()
-        self.speaker = 'zh'
+        self.speaker.voice = 'en-us'
 
     def speech_callback(self,request,response):
         self.get_logger().info(f"准备朗读{request.text}")

@@ -1,4 +1,5 @@
 from setuptools import find_packages, setup
+from glob import glob
 
 package_name = 'cerbers_partol'
 
@@ -11,6 +12,8 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name+"/config", ['config/partol.config.yaml']),
+        ('share/' + package_name+"/launch", glob('launch/*.py')),
+
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -25,7 +28,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'partol_node=cerbers_partol.partol_node:main'
+            'partol_node=cerbers_partol.partol_node:main',
+            'speaker=cerbers_partol.speaker:main'
         ],
     },
 )
